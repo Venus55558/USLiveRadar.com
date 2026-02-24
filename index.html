@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live US Weather Radar 2026 - Real-time national radar, storm tracking, and accurate forecasts for every city in the United States. Search any city instantly. Prepare for winter with the best gear.">
+    <meta name="keywords" content="US weather radar, live radar map USA, weather forecast United States, real time radar, storm tracker, city weather USA, national weather service radar, winter weather alerts">
+    <title>Live US Weather Radar • Real-Time Forecasts & Storm Tracking for Every American City 2026</title>
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Live US Weather Radar - National Storm Tracker & City Forecasts">
+    <meta property="og:description" content="Instant weather for any US city + animated national radar. Stay safe this winter.">
+    <meta property="og:image" content="https://picsum.photos/id/1015/1200/630">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .title-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        .radar-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .radar-sweep {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(transparent 0deg, rgba(34, 211, 238, 0.25) 30deg, transparent 90deg);
+            animation: sweep 4s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .weather-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .snow-particle {
+            position: absolute;
+            color: #e0f2fe;
+            font-size: 18px;
+            animation: snowFall 8s linear infinite;
+            pointer-events: none;
+            text-shadow: 0 0 8px #67e8f9;
+        }
+        
+        @keyframes snowFall {
+            to { transform: translateY(800px) rotate(720deg); }
+        }
+        
+        .radar-gif {
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body class="bg-[#0a1428] text-white">
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 w-full z-50 bg-[#0a1428]/95 backdrop-blur-xl border-b border-cyan-500/30">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bolt text-cyan-400 text-3xl"></i>
+                <span class="title-font text-3xl font-semibold tracking-tighter">USRadarLive</span>
+            </div>
+            
+            <div class="flex-1 max-w-xl mx-8">
+                <div class="relative">
+                    <input id="citySearch" 
+                           type="text" 
+                           placeholder="Search any US city (e.g. New York, Chicago, Miami...)" 
+                           class="w-full bg-[#13223f] border border-cyan-500/30 focus:border-cyan-400 rounded-3xl py-4 pl-14 pr-6 text-lg outline-none transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-cyan-400"></i>
+                </div>
+            </div>
+            
+            <a href="https://amzn.to/4tZzlps" target="_blank"
+               class="hidden md:flex items-center gap-3 bg-white text-[#0a1428] px-7 py-3.5 rounded-3xl font-semibold hover:bg-cyan-400 hover:text-white transition-all">
+                <i class="fa-solid fa-gloves text-xl"></i>
+                Winter Gloves
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="pt-28 pb-16 bg-[url('https://picsum.photos/id/1015/2000/1200')] bg-cover bg-center relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0a1428]/70 via-[#0a1428]/80 to-[#0a1428]"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-6 text-center pt-12">
+            <div class="inline-flex items-center bg-white/10 backdrop-blur px-8 py-3 rounded-3xl text-sm tracking-widest mb-6 border border-white/20">
+                <span class="text-emerald-400">● LIVE</span>
+                <span class="mx-3 text-white/60">|</span>
+                NATIONAL WEATHER RADAR — UPDATED EVERY 2 MINUTES
+            </div>
+            
+            <h1 class="title-font text-6xl md:text-7xl font-bold leading-none mb-6">
+                REAL-TIME US<br>WEATHER RADAR
+            </h1>
+            <p class="text-2xl text-cyan-100 max-w-2xl mx-auto">
+                Track storms across all 50 states • Search any city • Instant forecasts
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mt-12">
+                <a href="#radar" 
+                   class="px-10 py-5 bg-white text-[#0a1428] rounded-3xl font-semibold text-lg hover:scale-105 transition-all flex items-center gap-3">
+                    <i class="fa-solid fa-radar"></i>
+                    VIEW NATIONAL RADAR
+                </a>
+                <a href="https://amzn.to/4tZzlps" target="_blank"
+                   class="px-10 py-5 border-2 border-white/70 hover:border-cyan-400 rounded-3xl font-semibold text-lg flex items-center gap-3 transition-all">
+                    <i class="fa-solid fa-snowflake"></i>
+                    Gear Up for Winter Storms
+                </a>
+            </div>
+        </div>
+        
+        <!-- Floating snow -->
+        <div id="heroSnow" class="absolute inset-0 pointer-events-none"></div>
+    </section>
+
+    <!-- NATIONAL RADAR -->
+    <section id="radar" class="py-20 bg-[#13223f]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="px-6 py-2 bg-cyan-500/10 text-cyan-400 text-sm font-bold rounded-full">NATIONAL WEATHER SERVICE</span>
+                <h2 class="title-font text-5xl font-bold mt-4">Best Animated Radar in America</h2>
+                <p class="text-xl text-gray-400 mt-3">Continental US • Live Loop • Storm Movement</p>
+            </div>
+            
+            <div class="radar-container max-w-5xl mx-auto rounded-3xl overflow-hidden border-8 border-cyan-500/30 shadow-2xl relative">
+                <img src="https://radar.weather.gov/ridge/standard/CONUS_loop.gif" 
+                     alt="Live US National Weather Radar - Animated CONUS Loop" 
+                     class="radar-gif w-full block">
+                <div class="radar-sweep"></div>
+                <div class="absolute top-4 right-4 bg-black/70 text-xs px-4 py-2 rounded-2xl flex items-center gap-2">
+                    <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    LIVE • UPDATED EVERY 2 MIN
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 text-sm text-gray-400">
+                Source: NOAA National Weather Service • Public Domain
+            </div>
+        </div>
+    </section>
+
+    <!-- CITY SEARCH & WEATHER -->
+    <section class="py-20 bg-[#0a1428]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-12 gap-10">
+                <!-- Search Panel -->
+                <div class="lg:col-span-5">
+                    <div class="sticky top-24">
+                        <h3 class="text-3xl font-semibold mb-8 flex items-center gap-3">
+                            <i class="fa-solid fa-city"></i>
+                            Check Any US City
+                        </h3>
+                        
+                        <div class="bg-[#13223f] rounded-3xl p-8">
+                            <div class="relative mb-8">
+                                <input id="cityInput" type="text" placeholder="Type city name... (New York, Denver, Seattle...)" 
+                                       class="w-full bg-[#0a1428] border border-cyan-400/30 focus:border-cyan-400 rounded-2xl py-6 px-8 text-xl outline-none">
+                            </div>
+                            
+                            <button onclick="getWeather()" 
+                                    class="w-full bg-gradient-to-r from-cyan-400 to-blue-500 py-6 rounded-3xl font-bold text-xl hover:brightness-110 transition-all active:scale-95">
+                                SHOW LIVE WEATHER
+                            </button>
+                            
+                            <div class="mt-10 text-xs text-gray-500 space-y-2">
+                                <div class="flex justify-between"><span>Popular:</span> <span class="cursor-pointer hover:text-cyan-400" onclick="quickSearch('New York')">New York</span></div>
+                                <div class="flex justify-between"><span></span> <span class="cursor-pointer hover:text-cyan-400" onclick="quickSearch('Chicago')">Chicago</span></div>
+                                <div class="flex justify-between"><span></span> <span class="cursor-pointer hover:text-cyan-400" onclick="quickSearch('Los Angeles')">Los Angeles</span></div>
+                                <div class="flex justify-between"><span></span> <span class="cursor-pointer hover:text-cyan-400" onclick="quickSearch('Miami')">Miami</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gloves Promo -->
+                        <div class="mt-12 bg-gradient-to-br from-[#13223f] to-[#1e3a5f] p-8 rounded-3xl border border-cyan-400/20">
+                            <div class="flex gap-4">
+                                <img src="https://picsum.photos/id/201/180/180" alt="ihuan Waterproof Winter Gloves" 
+                                     class="w-20 h-20 object-cover rounded-2xl">
+                                <div>
+                                    <div class="uppercase text-xs tracking-widest text-amber-400">WINTER ESSENTIAL</div>
+                                    <h4 class="font-semibold text-xl leading-tight">Protect your hands in the next storm</h4>
+                                    <a href="https://amzn.to/4tZzlps" target="_blank"
+                                       class="mt-4 inline-block bg-white text-black text-sm font-bold px-6 py-3 rounded-2xl hover:bg-cyan-400 hover:text-white transition-all">
+                                        SHOP NOW — $15.99
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weather Display -->
+                <div class="lg:col-span-7">
+                    <div id="weatherDisplay" class="weather-card bg-[#13223f] rounded-3xl p-10 min-h-[520px] flex flex-col">
+                        <!-- Default state -->
+                        <div id="defaultState" class="flex-1 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-cloud-sun text-8xl text-cyan-400/60 mb-8"></i>
+                            <h3 class="text-3xl font-light">Enter a city above to see live conditions</h3>
+                            <p class="text-gray-400 mt-4 max-w-xs">Realistic mock data for demo • Real API integration possible</p>
+                        </div>
+                        
+                        <!-- Results -->
+                        <div id="resultsState" class="hidden">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div id="cityName" class="text-5xl font-semibold"></div>
+                                    <div id="condition" class="text-2xl text-cyan-300"></div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="temperature" class="text-8xl font-light leading-none"></div>
+                                    <div id="feelsLike" class="text-sm text-gray-400"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Animated weather icon area -->
+                            <div id="weatherAnimation" class="h-52 my-10 relative flex items-center justify-center text-9xl"></div>
+                            
+                            <div class="grid grid-cols-3 gap-6 text-center">
+                                <div>
+                                    <i class="fa-solid fa-wind text-cyan-400"></i>
+                                    <div id="wind" class="font-mono text-xl mt-1"></div>
+                                    <div class="text-xs text-gray-400">WIND</div>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-droplet text-cyan-400"></i>
+                                    <div id="humidity" class="font-mono text-xl mt-1"></div>
+                                    <div class="text-xs text-gray-400">HUMIDITY</div>
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-eye text-cyan-400"></i>
+                                    <div id="visibility" class="font-mono text-xl mt-1"></div>
+                                    <div class="text-xs text-gray-400">VISIBILITY</div>
+                                </div>
+                            </div>
+                            
+                            <a href="https://amzn.to/4tZzlps" target="_blank"
+                               class="mt-12 block text-center bg-white/10 hover:bg-white/20 border border-white/30 py-6 rounded-3xl font-semibold transition-all">
+                                ❄️ Prepare for the cold — Get ihuan Waterproof Gloves →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED CITIES -->
+    <section class="py-20 bg-[#13223f]">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-semibold text-center mb-12">Current Conditions Across America</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="featuredCities">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WINTER PREP -->
+    <section class="py-24 bg-gradient-to-br from-[#0a1428] to-[#1a2a4a]">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <div class="max-w-md mx-auto">
+                <span class="text-amber-400 text-sm font-bold">WINTER STORM SEASON 2026</span>
+                <h2 class="title-font text-6xl font-bold leading-none mt-4">Stay Safe &amp; Warm</h2>
+                <p class="mt-6 text-xl text-gray-300">When the radar shows heavy snow coming, make sure you have the right gear.</p>
+                
+                <div class="mt-12">
+                    <a href="https://amzn.to/4tZzlps" target="_blank"
+                       class="inline-flex items-center justify-center gap-4 bg-white text-[#0a1428] text-2xl font-bold px-16 py-8 rounded-3xl hover:scale-110 active:scale-95 transition-all shadow-2xl">
+                        <span>GET THE BEST WINTER GLOVES</span>
+                        <span class="text-4xl">→</span>
+                    </a>
+                </div>
+                <p class="text-xs text-gray-400 mt-6">Only $15.99 • Touchscreen • Waterproof • 10,000+ reviews</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-16">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="flex justify-center gap-8 text-2xl mb-8 text-cyan-400">
+                <i class="fa-solid fa-cloud"></i>
+                <i class="fa-solid fa-snowflake"></i>
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <p class="text-gray-400">Live US Weather Radar Demo • Mock data for illustration • Real-time data via NOAA &amp; weather APIs in production</p>
+            <div class="mt-8 flex justify-center gap-8 text-sm">
+                <a href="https://amzn.to/4tZzlps" target="_blank" class="hover:text-cyan-400">Winter Gloves Affiliate</a>
+                <a href="#" class="hover:text-cyan-400">Privacy</a>
+                <a href="#" class="hover:text-cyan-400">Contact</a>
+            </div>
+            <p class="text-[10px] text-gray-500 mt-12">© 2026 USRadarLive • All weather data public domain</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind ready
+        
+        const citiesData = {
+            "new york": { temp: "31°F", feels: "Feels like 24°F", cond: "Heavy Snow", wind: "18 mph NW", hum: "92%", vis: "1 mi", icon: "❄️" },
+            "chicago": { temp: "22°F", feels: "Feels like 12°F", cond: "Blizzard", wind: "28 mph N", hum: "88%", vis: "0.5 mi", icon: "🌨️" },
+            "los angeles": { temp: "68°F", feels: "Feels like 68°F", cond: "Clear Skies", wind: "6 mph W", hum: "45%", vis: "10 mi", icon: "☀️" },
+            "miami": { temp: "76°F", feels: "Feels like 79°F", cond: "Thunderstorms", wind: "14 mph S", hum: "81%", vis: "7 mi", icon: "⛈️" },
+            "denver": { temp: "18°F", feels: "Feels like 8°F", cond: "Light Snow", wind: "12 mph", hum: "78%", vis: "3 mi", icon: "❄️" },
+            "seattle": { temp: "41°F", feels: "Feels like 37°F", cond: "Rain", wind: "9 mph", hum: "95%", vis: "5 mi", icon: "🌧️" }
+        };
+        
+        function createSnow(container, count = 60) {
+            for (let i = 0; i < count; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snow-particle';
+                snow.textContent = ['❄️','❅','❆'][Math.floor(Math.random()*3)];
+                snow.style.left = Math.random() * 100 + '%';
+                snow.style.animationDuration = (Math.random() * 6 + 7) + 's';
+                snow.style.animationDelay = '-' + Math.random() * 10 + 's';
+                snow.style.opacity = Math.random() * 0.7 + 0.5;
+                snow.style.fontSize = (Math.random() * 14 + 14) + 'px';
+                container.appendChild(snow);
+                
+                // Remove after animation
+                setTimeout(() => snow.remove(), 20000);
+            }
+        }
+        
+        // Hero snow
+        createSnow(document.getElementById('heroSnow'), 80);
+        
+        function getWeather() {
+            const input = document.getElementById('cityInput').value.trim().toLowerCase();
+            const defaultEl = document.getElementById('defaultState');
+            const resultsEl = document.getElementById('resultsState');
+            
+            if (!input) return;
+            
+            const data = citiesData[input] || {
+                temp: "47°F",
+                feels: "Feels like 44°F",
+                cond: "Partly Cloudy",
+                wind: "11 mph",
+                hum: "67%",
+                vis: "9 mi",
+                icon: "⛅"
+            };
+            
+            defaultEl.classList.add('hidden');
+            resultsEl.classList.remove('hidden');
+            
+            document.getElementById('cityName').textContent = input.toUpperCase() || "YOUR CITY";
+            document.getElementById('temperature').textContent = data.temp;
+            document.getElementById('feelsLike').textContent = data.feels;
+            document.getElementById('condition').textContent = data.cond;
+            document.getElementById('wind').textContent = data.wind;
+            document.getElementById('humidity').textContent = data.hum;
+            document.getElementById('visibility').textContent = data.vis;
+            document.getElementById('weatherAnimation').innerHTML = `<span class="text-9xl">${data.icon}</span>`;
+        }
+        
+        function quickSearch(city) {
+            document.getElementById('cityInput').value = city;
+            getWeather();
+        }
+        
+        // Populate featured cities
+        function populateFeatured() {
+            const container = document.getElementById('featuredCities');
+            const samples = [
+                {city: "New York", temp: "31°F", cond: "Snow", icon: "❄️"},
+                {city: "Chicago", temp: "22°F", cond: "Blizzard", icon: "🌨️"},
+                {city: "Los Angeles", temp: "68°F", cond: "Sunny", icon: "☀️"},
+                {city: "Denver", temp: "18°F", cond: "Snow", icon: "❄️"}
+            ];
+            
+            samples.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "bg-[#0a1428] rounded-3xl p-6 cursor-pointer hover:bg-cyan-950 transition-all";
+                div.innerHTML = `
+                    <div class="text-5xl mb-4">${item.icon}</div>
+                    <div class="font-semibold text-xl">${item.city}</div>
+                    <div class="text-4xl font-light mt-2">${item.temp}</div>
+                    <div class="text-cyan-400 text-sm">${item.cond}</div>
+                `;
+                div.onclick = () => {
+                    document.getElementById('cityInput').value = item.city;
+                    getWeather();
+                    window.scrollTo({ top: 600, behavior: 'smooth' });
+                };
+                container.appendChild(div);
+            });
+        }
+        
+        // Init
+        window.onload = () => {
+            populateFeatured();
+            
+            // Demo: auto show New York after 2s
+            setTimeout(() => {
+                document.getElementById('cityInput').value = "New York";
+                getWeather();
+            }, 1800);
+            
+            // Keyboard support
+            document.getElementById('cityInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') getWeather();
+            });
+        };
+        
+        console.log('%cUS Weather Radar Page Ready with Affiliate Links ❄️', 'color:#22d3ee;font-size:13px');
+    </script>
+</body>
+</html>
